@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#080b0d">
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <title>360° Panorama</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.css">
+  <style>
+    :root {
+      color-scheme: dark;
+      font-family: Inter, "Noto Sans JP", system-ui, sans-serif;
+      background: #080b0d;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body,
+    #panorama {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+    }
+
+    body {
+      background: #080b0d;
+    }
+
+    #panorama::after {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      content: "";
+      background:
+        linear-gradient(180deg, rgba(0, 0, 0, .18), transparent 28%, transparent 72%, rgba(0, 0, 0, .32)),
+        radial-gradient(circle at center, transparent 52%, rgba(0, 0, 0, .22) 100%);
+    }
+
+    .brand {
+      position: fixed;
+      top: max(20px, env(safe-area-inset-top));
+      left: max(20px, env(safe-area-inset-left));
+      z-index: 4;
+      max-width: calc(100vw - 40px);
+      padding: 12px 15px;
+      color: #f3f5f6;
+      background: rgba(7, 10, 12, .7);
+      border: 1px solid rgba(255, 255, 255, .12);
+      border-radius: 10px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, .28);
+      backdrop-filter: blur(12px);
+    }
+
+    .brand strong {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: .08em;
+    }
+
+    .brand span {
+      display: block;
+      margin-top: 4px;
+      color: #aeb8bd;
+      font-size: 11px;
+      letter-spacing: .04em;
+    }
+
+    .hint {
+      position: fixed;
+      bottom: max(22px, env(safe-area-inset-bottom));
+      left: 50%;
+      z-index: 4;
+      padding: 9px 13px;
+      color: #cbd2d5;
+      font-size: 11px;
+      white-space: nowrap;
+      background: rgba(7, 10, 12, .68);
+      border: 1px solid rgba(255, 255, 255, .1);
+      border-radius: 999px;
+      transform: translateX(-50%);
+      backdrop-filter: blur(10px);
+      transition: opacity .5s ease;
+    }
+
+    .pnlm-container {
+      background: #080b0d;
+    }
+
+    .pnlm-controls-container {
+      z-index: 3;
+    }
+
+    .pnlm-control {
+      filter: grayscale(1) brightness(.9);
+      opacity: .86;
+    }
+
+    @media (max-width: 520px) {
+      .brand {
+        padding: 10px 12px;
+      }
+
+      .brand span {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main id="panorama" aria-label="360度パノラマ画像"></main>
+  <div class="brand">
+    <strong>360° PANORAMA</strong>
+    <span>Tokyo waterfront · June 2026</span>
+  </div>
+  <div class="hint" id="hint">ドラッグして見回す · スクロールで拡大縮小</div>
+
+  <script src="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.js"></script>
+  <script>
+    const viewer = pannellum.viewer("panorama", {
+      type: "equirectangular",
+      panorama: "DJI_20260609150726_0002_V.JPG",
+      autoLoad: true,
+      autoRotate: -1.4,
+      autoRotateInactivityDelay: 5000,
+      compass: false,
+      draggable: true,
+      mouseZoom: true,
+      showControls: true,
+      showFullscreenCtrl: true,
+      showZoomCtrl: true,
+      orientationOnByDefault: false,
+      pitch: -8,
+      yaw: 12,
+      hfov: 105,
+      minHfov: 45,
+      maxHfov: 120,
+      friction: 0.18
+    });
+
+    const hint = document.getElementById("hint");
+    const dismissHint = () => {
+      hint.style.opacity = "0";
+      window.setTimeout(() => hint.remove(), 600);
+    };
+
+    window.setTimeout(dismissHint, 6500);
+    document.addEventListener("pointerdown", dismissHint, { once: true });
+    document.addEventListener("wheel", dismissHint, { once: true });
+  </script>
+</body>
+</html>
